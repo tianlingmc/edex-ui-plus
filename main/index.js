@@ -167,8 +167,7 @@ function createWindow() {
       preload: join(__dirname, '../preload/index.js'),
       contextIsolation: true,
       nodeIntegration: false,
-      spellcheck: false,
-      devTools: true
+      spellcheck: false
     }
   })
 
@@ -177,9 +176,6 @@ function createWindow() {
   if (isDev) {
     // 如需 DevTools 可手动按 Ctrl+Shift+I
     console.log('[main] dev mode, DevTools 手动打开 (Ctrl+Shift+I)')
-  } else {
-    // 临时调试：打包后自动开 DevTools，便于查黑屏问题
-    win.webContents.openDevTools({ mode: 'detach' })
   }
   win.webContents.on('console-message', (event) => {
     const { level, message, lineNumber, sourceId } = event
