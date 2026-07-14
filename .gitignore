@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+out/
+release/
+
+# Vite / electron-vite cache
+.vite/
+*.log
+
+# temp
+_chk.*
+*.tmp
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+
+# Local env
+.env
+.env.local
+
+# Keep the original archive out of the repo (read-only, lives outside this project)
+edex-ui-master/
+*.zip

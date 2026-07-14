@@ -1,0 +1,103 @@
+/* 进程排行：顶部模块 + 视觉柱条 */
+div#mod_toplist {
+    border-top: 0.092vh solid rgba(var(--color_r), var(--color_g), var(--color_b), 0.3);
+    font-family: var(--font_main_light);
+    letter-spacing: 0.092vh;
+    padding: 0.645vh 0vh;
+    display: flex;
+    flex-wrap: wrap;
+    cursor: pointer;
+    transition: background .15s ease;
+}
+div#mod_toplist:hover {
+    background: rgba(var(--color_r), var(--color_g), var(--color_b), 0.04);
+}
+
+div#mod_toplist::before {
+    content: "";
+    border-left: 0.092vh solid rgba(var(--color_r), var(--color_g), var(--color_b), 0.3);
+    align-self: flex-start;
+    position: relative;
+    left: -0.092vh;
+    top: -1.111vh;
+    height: 0.833vh;
+}
+div#mod_toplist::after {
+    content: "";
+    border-right: 0.092vh solid rgba(var(--color_r), var(--color_g), var(--color_b), 0.3);
+    position: relative;
+    right: -15.4vw;
+    top: -12.7vh;
+    height: 0.833vh;
+}
+div#mod_toplist h1 {
+    font-size: 1.48vh;
+    margin: 0vh;
+    margin-bottom: -1vh;
+    width: 97%;
+    padding-left: 0.5vh;
+}
+div#mod_toplist i {
+    font-style: normal;
+    font-size: 1.20vh;
+    opacity: 0.5;
+    text-align: right;
+    display: inline-block;
+    position: relative;
+    bottom: 1.6vh;
+    width: 100%;
+}
+
+/* 进程行容器 */
+#mod_toplist_body {
+    width: 100%;
+    padding: 0.2vh 0.3vw 0 0.5vh;
+}
+.tp_row {
+    display: flex;
+    align-items: center;
+    padding: 0.15vh 0;
+    font-size: 1.3vh;
+    border-bottom: 0.04vh solid rgba(var(--color_r), var(--color_g), var(--color_b), 0.04);
+    transition: background .1s ease;
+}
+.tp_row:hover {
+    background: rgba(var(--color_r), var(--color_g), var(--color_b), 0.04);
+}
+.tp_pid {
+    width: 3.5vw;
+    opacity: 0.5;
+    font-size: 1.15vh;
+}
+.tp_name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: bold;
+}
+.tp_val {
+    width: 6vw;
+    text-align: right;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.3vw;
+    font-size: 1.2vh;
+}
+.tp_bar {
+    display: inline-block;
+    width: 2.5vw;
+    height: 0.5vh;
+    background: rgba(var(--color_r), var(--color_g), var(--color_b), 0.08);
+    border-radius: 0.1vh;
+    overflow: hidden;
+}
+.tp_fill {
+    display: block;
+    height: 100%;
+    border-radius: 0.1vh;
+    transition: width .4s ease;
+}
+.tp_cpu { background: rgb(var(--color_r), var(--color_g), var(--color_b)); }
+.tp_mem { background: rgba(var(--color_r), var(--color_g), var(--color_b), 0.35); }

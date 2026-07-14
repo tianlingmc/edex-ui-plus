@@ -1,0 +1,78 @@
+{
+  "name": "edex-ui-plus",
+  "productName": "eDEX-UI-Plus",
+  "version": "1.0.0",
+  "description": "A science fiction desktop running everywhere. Based on eDEX-UI (GitSquared), GPL-3.0.",
+  "license": "GPL-3.0",
+  "author": "Gabriel 'Squared' SAILLARD (original author) and eDEX-UI-Plus contributors",
+  "originalAuthor": "Gabriel 'Squared' SAILLARD <gabriel@saillard.dev> (https://gaby.dev)",
+  "basedOn": "eDEX-UI https://github.com/GitSquared/edex-ui (GPL-3.0)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tianlingmc/edex-ui-plus.git"
+  },
+  "homepage": "https://github.com/tianlingmc/edex-ui-plus",
+  "bugs": {
+    "url": "https://github.com/tianlingmc/edex-ui-plus/issues"
+  },
+  "private": false,
+  "main": "out/main/index.js",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "preview": "electron-vite preview",
+    "dist": "electron-vite build && electron-builder",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@xterm/addon-attach": "^0.12.0",
+    "@xterm/addon-fit": "^0.11.0",
+    "@xterm/addon-webgl": "^0.19.0",
+    "@xterm/xterm": "^6.0.0",
+    "augmented-ui": "^2.0.0",
+    "geolite2-redist": "^3.1.3",
+    "howler": "^2.2.4",
+    "maxmind": "^5.0.6",
+    "node-pty": "^1.1.0",
+    "pdfjs-dist": "^4.0.0",
+    "systeminformation": "^5.31.16",
+    "ws": "^8.21.0"
+  },
+  "devDependencies": {
+    "electron": "^43.1.0",
+    "electron-builder": "^26.15.3",
+    "electron-vite": "^5.0.0",
+    "vitest": "^4.1.10"
+  },
+  "build": {
+    "appId": "com.edex.ui.plus",
+    "productName": "eDEX-UI-Plus",
+  "directories": {
+      "output": "../release"
+  },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": null,
+      "signExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  },
+  "allowScripts": {
+    "electron-winstaller@5.4.0": true,
+    "esbuild@0.25.12": true,
+    "esbuild@0.28.1": true,
+    "node-pty@1.1.0": true,
+    "electron@43.1.0": true
+  }
+}

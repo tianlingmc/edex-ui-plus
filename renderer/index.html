@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src ws: http://localhost:* https://localhost:*; img-src 'self' data:; font-src 'self' data:; media-src 'self' data: blob:"
+    />
+    <title>eDEX-UI-Plus</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: #000000;
+      }
+    </style>
+  </head>
+  <body class="booting">
+    <!-- 启动动画遮罩（boot.js 填充内容，复用原版 boot_screen.css）。
+         原版 boot_screen.css 未设置 z-index，原版因为启动期间 DOM 里还没有其它面板而无需遮挡；
+         本工程面板是静态写在 HTML 里的，故由 css/main.css 给 #boot_screen 提最高 z-index，
+         并在 boot 期间用 body.booting 隐藏其它面板（与原版“启动后才创建 UI”行为一致）。 -->
+    <section id="boot_screen"></section>
+
+    <section class="mod_column" id="mod_column_left">
+      <h3 class="title"><p>PANEL</p><p>SYSTEM</p></h3>
+    </section>
+
+    <section id="main_shell" augmented-ui="bl-clip tr-clip exe">
+      <h3 class="title"><p>TERMINAL</p><p></p></h3>
+      <h1 id="main_shell_greeting"></h1>
+      <ul id="main_shell_tabs"></ul>
+      <div id="main_shell_innercontainer">
+        <div id="terminal" class="active"></div>
+      </div>
+    </section>
+
+    <section class="mod_column" id="mod_column_right">
+      <h3 class="title"><p>PANEL</p><p>NETWORK</p></h3>
+    </section>
+
+    <!-- 文件浏览器 / 屏幕键盘：原版为 body 直接子元素，由 css-origin 的
+         filesystem.css / keyboard.css（position: relative; width: 43vw / 55.5vw）
+         配合 body 的 flex-wrap 布局（终端在上、二者在下），这里还原该结构。 -->
+    <section id="filesystem">
+      <h3 class="title"><p>FILESYSTEM</p><p id="fs_disp_title_dir">~</p></h3>
+      <div id="fs_disp_container"></div>
+      <div id="fs_space_bar">
+        <h1>EXIT DISPLAY</h1>
+        <h3>Calculating available space...</h3><progress value="100" max="100"></progress>
+      </div>
+    </section>
+
+    <section id="keyboard"></section>
+
+    <script>
+      // 调试兜底：把 main.js 导入/运行错误用红字画到屏幕，不依赖 DevTools
+      console.log('[renderer] index.html parsed, loading main.js module')
+      window.addEventListener('error', (e) => {
+        console.error('[window error]', e.message, e.filename, e.lineno)
+        const box = document.getElementById('errbox') || (() => {
+          const d = document.createElement('pre')
+          d.id = 'errbox'
+          d.style.cssText = 'position:fixed;left:0;top:0;right:0;z-index:9999;color:#ff5555;background:#000;padding:8px;white-space:pre-wrap;font-family:monospace;font-size:13px'
+          document.body.appendChild(d)
+          return d
+        })()
+        box.textContent += String(e.message) + '\n' + (e.error && e.error.stack ? e.error.stack : '') + '\n'
+      })
+      window.addEventListener('unhandledrejection', (e) => {
+        console.error('[unhandledrejection]', e.reason)
+      })
+    </script>
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,225 @@
+* { box-sizing: border-box; }
+
+/* 启动遮罩：原版 boot_screen.css 未设 z-index（原版启动期间 DOM 尚无其它面板），
+   本工程面板为静态 HTML，故在此强制最高层级，确保透明遮罩盖住所有面板。 */
+#boot_screen {
+  z-index: 9999999;
+}
+
+/* 启动期间（body.booting）隐藏所有业务面板，模拟原版“启动完成后才创建 UI”的行为，
+   避免透明 boot 遮罩下透出终端/列/文件浏览器/键盘。各面板在 startUI 移除 booting 后
+   按各自淡入逻辑（mod_column.activated / #filesystem opacity:1 / #keyboard 动画）显现。 */
+body.booting #main_shell,
+body.booting #mod_column_left,
+body.booting #mod_column_right,
+body.booting #filesystem,
+body.booting #keyboard {
+  opacity: 0 !important;
+  pointer-events: none;
+}
+
+/* body 的网格背景 / 居中 / 字体等由原版 css-origin/css/main.css 提供（已先于本文件导入）。
+   这里仅保留本工程必要的补充/覆盖规则。 */
+
+/* 中央终端面板：布局由原版 main_shell.css 提供（65%×60.3% 居中、augmented-ui 切角）。
+   这里只补充终端容器的弹性填充。 */
+#main_shell_innercontainer {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  width: 100%;
+}
+#terminal {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0.6vh;
+  box-sizing: border-box;
+}
+#terminal .xterm { height: 100%; }
+#terminal .xterm-viewport { background: transparent !important; }
+/* 禁用终端输入框的输入法（IME）提示：避免中文/日文输入法过度干扰 xterm 输入 */
+.xterm-helper-textarea { ime-mode: disabled; }
+/* 通用面板（含增强 UI 切角） */
+.panel {
+  display: flex;
+  flex-direction: column;
+  --aug-border: 0.18vh;
+  --aug-border-bg: rgb(var(--color_r), var(--color_g), var(--color_b));
+  --aug-border-opacity: 0.5;
+  background: rgba(var(--color_light_black), 0.85);
+}
+
+/* 面板标题：还原原版两端对齐 + 左右角标 */
+.panel .title {
+  position: relative;
+  margin: 0;
+  padding: 0.15vh 0.925vh;
+  font-size: 1.02vh;
+  letter-spacing: 0.05vh;
+  text-transform: uppercase;
+  border-bottom: 0.092vh solid rgba(var(--color_r), var(--color_g), var(--color_b), 0.3);
+  display: flex;
+  justify-content: space-between;
+  opacity: 0.9;
+}
+.panel .title::before {
+  content: "";
+  border-left: 0.092vh solid rgba(var(--color_r), var(--color_g), var(--color_b), 0.3);
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 0.5vh;
+}
+.panel .title::after {
+  content: "";
+  border-right: 0.092vh solid rgba(var(--color_r), var(--color_g), var(--color_b), 0.3);
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  height: 0.5vh;
+}
+.panel .title p { margin: 0; }
+.panel-body {
+  padding: 0.7vh 0.925vh;
+  overflow: hidden;
+  flex: 1;
+  min-height: 0;
+}
+
+.kv {
+  display: flex;
+  justify-content: space-between;
+  gap: 1vh;
+  padding: 0.15vh 0;
+  font-size: 1.25vh;
+}
+.kv span { opacity: 0.55; }
+.kv b { font-weight: 500; }
+
+.bar {
+  height: 0.7vh;
+  background: rgba(var(--color_r), var(--color_g), var(--color_b), 0.15);
+  overflow: hidden;
+  margin: 0.3vh 0;
+}
+.bar > i {
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: rgb(var(--color_r), var(--color_g), var(--color_b));
+  transition: width 0.3s linear;
+}
+
+/* 不在这里给 h1 设全局 font-size：原版各 mod_*.css 会让模块 h1 继承模块根的 vh 字号，
+   全局 3vh 会破坏模块内部排版；模态框/媒体等由各自 css 自行设定字号。 */
+h1 { margin: 0; font-weight: 500; }
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-button { display: none; }
+::-webkit-scrollbar-track {
+  background: rgba(var(--color_r), var(--color_g), var(--color_b), 0.4);
+  border: 3px solid var(--color_light_black);
+}
+::-webkit-scrollbar-thumb { background: rgb(var(--color_r), var(--color_g), var(--color_b)); }
+
+/* 文件浏览器 / 屏幕键盘：原版为 body 直接子元素，由 css-origin 的 filesystem.css /
+   keyboard.css（position: relative; width: 43vw / 55.5vw）配合 body 的 flex-wrap
+   完成“终端在上、二者在下”的布局，这里不再额外包裹，沿用原版定位。 */
+
+.fs-entry {
+  display: flex;
+  align-items: center;
+  gap: 0.6vh;
+  padding: 0.15vh 0.4vh;
+  cursor: pointer;
+  font-size: 1.25vh;
+  opacity: 0.85;
+  transition: background 0.1s;
+}
+.fs-entry:hover {
+  background: rgba(var(--color_r), var(--color_g), var(--color_b), 0.15);
+}
+.fs-entry:active {
+  background: rgba(var(--color_r), var(--color_g), var(--color_b), 0.4);
+}
+.fs-icon {
+  font-family: monospace;
+  font-size: 1.4vh;
+  width: 1.4vh;
+  text-align: center;
+  opacity: 0.7;
+}
+.fs-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 可滚动列表（模糊结果等通用） */
+.panel-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15vh;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+  padding-right: 0.4vh;
+}
+
+/* 通用小按钮 */
+.mini_btn {
+  background: transparent;
+  color: rgb(var(--color_r), var(--color_g), var(--color_b));
+  border: 0.13vh solid rgba(var(--color_r), var(--color_g), var(--color_b), 0.5);
+  border-radius: 0.3vh;
+  padding: 0.3vh 0.9vh;
+  font-family: var(--font_main), monospace;
+  font-size: 1.15vh;
+  letter-spacing: 0.05vh;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+.mini_btn:hover {
+  background: rgba(var(--color_r), var(--color_g), var(--color_b), 0.2);
+}
+.mini_btn:active {
+  background: rgba(var(--color_r), var(--color_g), var(--color_b), 0.45);
+}
+
+/* 模态框与命令面板的样式直接复用原版 modal.css / mod_fuzzyFinder.css（已在 main.js 引入），
+   此处仅保留本项目新增的媒体 / PDF 相关样式。 */
+
+/* 媒体播放模态 */
+.media_wrap { padding: 0.5vh 0; }
+
+/* PDF 阅读模态（原版 DOM：.pdf_options / .pdf_container / .pdf_canvas，容器与画布尺寸由 css-origin 提供） */
+.pdf_canvas { display: block; }
+.pdf_options button {
+  background: transparent;
+  color: rgb(var(--color_r), var(--color_g), var(--color_b));
+  border: 0.13vh solid rgba(var(--color_r), var(--color_g), var(--color_b), 0.5);
+  border-radius: 0.3vh;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.pdf_options button:hover {
+  background: rgba(var(--color_r), var(--color_g), var(--color_b), 0.15);
+}
+
+/* 原版 modal.css 的 error/warning 边框用到 --color_red / --color_yellow，
+   主题注入未提供这两个变量，这里给默认值（不影响主题切换）。 */
+:root {
+  --color_red: #ff5555;
+  --color_yellow: #ffcf5c;
+}
+
+/* 原版 mod_fuzzyFinder.css 未限制结果高度，这里补一条避免选项过多时模态框超出屏幕 */
+ul#fuzzyFinder-results {
+  max-height: 52vh;
+  overflow-y: auto;
+}
