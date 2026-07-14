@@ -1,88 +1,94 @@
 # eDEX-UI-Plus
 
-> A science fiction desktop running everywhere. Awesome.
+**科幻风格桌面终端模拟器** — 全屏终端监控界面，兼具科幻观感与实用功能。
 
-**eDEX-UI-Plus 是基于 [eDEX-UI](https://github.com/GitSquared/edex-ui) 的二次开发项目。**
+基于 eDEX-UI (GPL-3.0) 二次开发，升级底层技术栈并改进使用体验。
 
-eDEX-UI 由 Gabriel 'Squared' SAILLARD 创作，以 GPL-3.0 许可发布，并于 2021-10-18 归档停更。
-本项目的目标是：在保留原版科幻终端观感与全部功能模块的前提下，将底层技术栈现代化
-（升级 Electron、采用安全进程模型、升级终端引擎），修复时效性缺陷，并提供简体中文配置说明。
-
-## 许可与署名
-
-- 本软件基于 eDEX-UI 二次开发，原作者保留全部版权。
-- 本项目以 **GNU GPL-3.0** 发布（与原项目一致）。
-- 完整许可文本见 [LICENSE](./LICENSE)；署名与第三方资源许可见 [NOTICE](./NOTICE.md)。
-- 原项目：<https://github.com/GitSquared/edex-ui>
-
-## 与原项目的关系
-
-- 产品名由 eDEX-UI 改为 **eDEX-UI-Plus**，以明确其为衍生版本，不暗示与原作者的官方关联。
-- 视觉资产（主题、键盘布局、字体、音效、WebGL 地球）与功能模块在原版基础上迁移。
-- 代码以原版为起点进行现代化重构，并非原版的直接打包。
+![screenshot](https://github.com/tianlingmc/edex-ui-plus/raw/main/screenshot.png)
 
 ## 功能特性
 
-- 全功能终端模拟器（多标签页、颜色、鼠标事件、curses 支持，最多 6 个终端）。
-- 实时系统（CPU/内存/进程）与网络（GeoIP、活跃连接、速率）监控。
-- 触控屏支持，含屏幕键盘（19 种布局）。
-- 跟随终端 CWD 的目录浏览器（支持 Show disks、右键菜单、空间使用率）。
-- 通过主题（21 种）、键盘布局、CSS 注入深度定制。
-- 可选科幻音效。
-- 配置热重载（修改设置后无需重启应用）。
-- 简体中文配置说明（键名保留英文，描述汉化）。
-- 终端行为配置：新建时询问类型、默认终端类型、关闭前确认。
+### 终端
+- 多标签页终端模拟器（最多 6 个独立终端）
+- 标签页支持拖拽排序、独立关闭
+- 新建终端时可选 Shell 类型（cmd / PowerShell / WSL 等）
+- 关闭终端时确认提示，防止误操作
+- 支持颜色、鼠标事件、curses 应用
 
-## 构建与运行
+### 系统监控
+- 实时 CPU / 内存 / 进程监控
+- 网络连接监控（GeoIP 定位、活跃连接、速率统计）
+- 硬盘空间使用情况
 
-### 环境要求
+### 文件浏览器
+- 跟随终端工作目录（CWD）自动切换
+- 显示磁盘列表（Show disks）
+- 右键菜单（复制路径、打开文件等）
+- 目录空间使用率条
 
-- Node.js >= 22
-- npm >= 10
-- Windows x64（当前版本仅支持 Windows，跨平台支持待后续版本）
+### 界面定制
+- 21 套科幻风格主题
+- 19 种屏幕键盘布局（含 Dvorak、Colemak 等）
+- CSS 注入自由修改样式
+- 科幻音效（按键音、启动音等）
+- 时钟格式（12/24 小时制）
+- 入场动画速度调节
 
-### 开发模式
+### 设置与配置
+- 图形化设置页面（左侧分类导航）
+- 恢复默认配置一键重置
+- 配置热重载 — 修改后无需重启应用
+- 简体中文配置说明（配置键名保留英文，描述汉化）
+- 终端参数：字体大小、光标样式/闪烁、回滚行数、行高、字间距
 
-```bash
+### 更多的功能
+- PDF / Markdown / 图片文件阅读器
+- 内置媒体播放器
+- WebGL 3D 互动地球（GeoIP 可视化）
+- 网络连通性检测（Ping）
+
+## 安装
+
+### 下载安装包
+
+从 [Releases](https://github.com/tianlingmc/edex-ui-plus/releases) 页面下载最新版本。
+
+Windows 安装程序 (`eDEX-UI-Plus Setup *.exe`) 支持选择安装目录、创建桌面快捷方式。
+
+### 从源码构建
+
+**环境要求：** Node.js >= 22, Windows x64
+
+```
+git clone https://github.com/tianlingmc/edex-ui-plus.git
+cd edex-ui-plus
 cd src
 npm install
-npm run dev
+npm run dev       # 开发模式（热更新）
+npm run dist      # 打包为安装程序
+npm test          # 运行测试
 ```
 
-### 打包发布
-
-```bash
-cd src
-npm run dist
-```
-
-产物位于 `release/` 目录：
-- `eDEX-UI-Plus Setup 1.0.0.exe` — NSIS 安装程序
-- `win-unpacked/eDEX-UI-Plus.exe` — 便携版（解压即用）
-
-### 运行测试
-
-```bash
-cd src
-npm test
-```
-
-## 下载
-
-从 [Releases](https://github.com/tianlingmc/edex-ui-plus/releases) 页面下载最新安装包。
-
-## 构建说明
-
-当前版本使用以下技术栈：
+## 技术栈
 
 | 组件 | 版本 |
 |------|------|
-| Electron | 43.1.0 |
-| Vite / electron-vite | 7.x / 5.x |
-| xterm.js | 6.x (@xterm/xterm + addons) |
-| node-pty | 1.1.0 (conpty/WinPTY) |
-| PDF.js | 4.x |
-| Howler.js | 2.x |
-| systeminformation | 5.x |
-| ws (WebSocket) | 8.x |
-| electron-builder | 26.x (NSIS) |
+| Electron | 43 |
+| Vite / electron-vite | 7 / 5 |
+| xterm.js | 6 (含 addons) |
+| node-pty | 1 (conpty / WinPTY) |
+| PDF.js | 4 |
+| Howler.js | 2 |
+| systeminformation | 5 |
+| ws (WebSocket) | 8 |
+| electron-builder | 26 (NSIS) |
+
+## 许可
+
+**GNU General Public License v3.0**
+
+本项目基于 [eDEX-UI](https://github.com/GitSquared/edex-ui) (原作者 Gabriel 'Squared' SAILLARD) 二次开发，以 GPL-3.0 许可发布。
+
+完整许可文本见 [LICENSE](./LICENSE)，署名与第三方资源许可见 [NOTICE](./NOTICE.md)。
+
+> 保留原版全部版权。本项目的修改和附加代码同样以 GPL-3.0 许可发布。
