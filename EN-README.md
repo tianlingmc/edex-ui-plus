@@ -82,6 +82,22 @@
 
 ---
 
+<p align="center">
+  <img alt="Screenshot 1" src="media/READMEimges/imges (1).png" width="45%">
+  <img alt="Screenshot 2" src="media/READMEimges/imges (2).png" width="45%">
+</p>
+
+<p align="center">
+  <img alt="Screenshot 3" src="media/READMEimges/imges (3).png" width="45%">
+  <img alt="Screenshot 4" src="media/READMEimges/imges (4).png" width="45%">
+</p>
+
+<p align="center">
+  <img alt="Screenshot 5" src="media/READMEimges/imges (5).png" width="90%">
+</p>
+
+---
+
 ## Installation
 
 Download the latest installer from the [Releases](https://github.com/tianlingmc/edex-ui-plus/releases) page.
