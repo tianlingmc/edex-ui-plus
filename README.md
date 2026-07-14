@@ -1,3 +1,8 @@
+<p align="center">
+  <br>
+  <img alt="Logo" src="media/logo.png">
+  <br></p>
+
 # eDEX-UI-Plus
 
 **科幻风格桌面终端模拟器** — 全屏终端监控界面，兼具科幻观感与实用功能。

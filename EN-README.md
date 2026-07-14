@@ -1,3 +1,8 @@
+<p align="center">
+  <br>
+  <img alt="Logo" src="media/logo.png">
+  <br></p>
+
 # eDEX-UI-Plus
 
 **Sci-Fi desktop terminal emulator** — A fullscreen terminal monitoring interface combining sci-fi aesthetics with practical functionality.
