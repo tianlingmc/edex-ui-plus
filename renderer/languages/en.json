@@ -84,5 +84,13 @@
   "closeTermPrompt": "Confirm on close",
   "closeTermPrompt_desc": "Show confirmation dialog before closing a terminal",
   "reset_defaults": "RESET DEFAULTS",
-  "reset_done": "Defaults restored"
+  "reset_done": "Defaults restored",
+  "check_update": "Check for Updates",
+  "update_title": "Update",
+  "update_checking": "Checking for updates…",
+  "update_available": "New version {latest} is available (current: {current})",
+  "update_none": "You are on the latest version",
+  "update_error": "Failed to check for updates. Please try again later.",
+  "update_open_release": "Go to Release",
+  "update_close": "Close"
 }

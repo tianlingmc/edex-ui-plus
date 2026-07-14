@@ -22,6 +22,28 @@ function copyTelemetryChild() {
   }
 }
 
+// encom-globe + grid.json 非 rollup 入口，必须显式复制到 out/renderer/
+function copyVendorAssets() {
+  return {
+    name: 'copy-vendor-assets',
+    apply: 'build',
+    closeBundle() {
+      const items = [
+        ['renderer/public/vendor/encom-globe.js', 'out/renderer/vendor/encom-globe.js'],
+        ['renderer/public/misc/grid.json', 'out/renderer/misc/grid.json']
+      ]
+      for (const [srcRel, dstRel] of items) {
+        const src = resolve(__dirname, srcRel)
+        const dst = resolve(__dirname, dstRel)
+        if (!existsSync(src)) { console.warn('[build] vendor src not found:', srcRel); continue }
+        mkdirSync(dirname(dst), { recursive: true })
+        copyFileSync(src, dst)
+        console.log('[build] copied', srcRel, '->', dstRel)
+      }
+    }
+  }
+}
+
 // 本工程根目录即 src/（所有二次开发在此进行），electron-vite 默认的 <root>/src/ 约定不适用，
 // 因此显式声明三个进程的入口（路径相对工程根 = src/）。
 export default defineConfig({
@@ -45,6 +67,14 @@ export default defineConfig({
     root: 'renderer',
     // 构建产物用相对路径，打包后通过 file:// 加载时资源才能正确解析
     base: './',
+    plugins: [{
+      name: 'strip-crossorigin',
+      apply: 'build',
+      enforce: 'post',
+      transformIndexHtml(html) {
+        return html.replace(/\s+crossorigin(=["\'][^"\']*["\'])?/g, '')
+      }
+    }],
     build: {
       rollupOptions: {
         // 注意：build 的 input 是相对工程根 (src/) 解析的，与 main/preload 一致，不能用 'index.html'

@@ -1,88 +1,154 @@
-# eDEX-UI-Plus
+<p align="center">
+  <img alt="Logo" src="media/logo.png" width="256">
+</p>
 
-> A science fiction desktop running everywhere. Awesome.
+<h1 align="center">eDEX-UI-Plus</h1>
 
-**eDEX-UI-Plus 是基于 [eDEX-UI](https://github.com/GitSquared/edex-ui) 的二次开发项目。**
+<p align="center">
+  <strong>科幻风格桌面终端模拟器</strong><br>
+  全屏终端监控界面，兼具赛博朋克观感与实用功能
+</p>
 
-eDEX-UI 由 Gabriel 'Squared' SAILLARD 创作，以 GPL-3.0 许可发布，并于 2021-10-18 归档停更。
-本项目的目标是：在保留原版科幻终端观感与全部功能模块的前提下，将底层技术栈现代化
-（升级 Electron、采用安全进程模型、升级终端引擎），修复时效性缺陷，并提供简体中文配置说明。
+<p align="center">
+  <a href="https://github.com/tianlingmc/edex-ui-plus/releases"><img alt="Version" src="https://img.shields.io/badge/版本-v1.1.0-00d8ff?style=flat-square"></a>
+  <a href="./LICENSE"><img alt="License" src="https://img.shields.io/badge/许可-GPLv3-00d8ff?style=flat-square"></a>
+  <a href="https://github.com/tianlingmc/edex-ui-plus/releases"><img alt="Downloads" src="https://img.shields.io/badge/下载-安装包-00d8ff?style=flat-square"></a>
+  <a href="https://github.com/GitSquared/edex-ui"><img alt="Based on" src="https://img.shields.io/badge/基于-eDEX--UI-00d8ff?style=flat-square"></a>
+</p>
 
-## 许可与署名
+<p align="center">
+  简体中文 · <a href="./EN-README.md">English</a>
+</p>
 
-- 本软件基于 eDEX-UI 二次开发，原作者保留全部版权。
-- 本项目以 **GNU GPL-3.0** 发布（与原项目一致）。
-- 完整许可文本见 [LICENSE](./LICENSE)；署名与第三方资源许可见 [NOTICE](./NOTICE.md)。
-- 原项目：<https://github.com/GitSquared/edex-ui>
+---
 
-## 与原项目的关系
+> **eDEX-UI-Plus** 是基于 [eDEX-UI](https://github.com/GitSquared/edex-ui) (GPL-3.0) 的二次开发项目。  
+> 保留原版科幻终端界面的全部视觉基因，将底层技术栈全面现代化，修复时效性缺陷，并改进日常使用体验。
 
-- 产品名由 eDEX-UI 改为 **eDEX-UI-Plus**，以明确其为衍生版本，不暗示与原作者的官方关联。
-- 视觉资产（主题、键盘布局、字体、音效、WebGL 地球）与功能模块在原版基础上迁移。
-- 代码以原版为起点进行现代化重构，并非原版的直接打包。
+> 界面默认以英语显示，配置说明与快捷键帮助已汉化为简体中文。本说明文档提供中英双语版本。
+
+---
+
+## 一览
+
+| 类别 | 特性 |
+|------|------|
+| 终端 | 多标签页、拖拽排序、Shell 选择、关闭确认、curses 支持 |
+| 监控 | 实时 CPU / 内存 / 进程 / 网络 (GeoIP) / 磁盘空间 |
+| 文件 | 跟随 CWD 自动切换、磁盘列表、右键菜单、空间条 |
+| 主题 | 科幻主题 + CSS 注入 + 自定义键盘布局 |
+| 音效 | 科幻风格按键音、启动音、音量/放大可调 |
+| 阅读器 | PDF / Markdown / 图片内联预览 |
+| 更多 | WebGL 互动地球、内置媒体播放器、Ping 连通检测 |
+
+---
 
 ## 功能特性
 
-- 全功能终端模拟器（多标签页、颜色、鼠标事件、curses 支持，最多 6 个终端）。
-- 实时系统（CPU/内存/进程）与网络（GeoIP、活跃连接、速率）监控。
-- 触控屏支持，含屏幕键盘（19 种布局）。
-- 跟随终端 CWD 的目录浏览器（支持 Show disks、右键菜单、空间使用率）。
-- 通过主题（21 种）、键盘布局、CSS 注入深度定制。
-- 可选科幻音效。
-- 配置热重载（修改设置后无需重启应用）。
-- 简体中文配置说明（键名保留英文，描述汉化）。
-- 终端行为配置：新建时询问类型、默认终端类型、关闭前确认。
+### 终端
+- 最多 6 个独立终端标签页，支持拖拽排序与独立关闭
+- 新建终端时弹出 Shell 选择列表（cmd / PowerShell / WSL / git-bash 等）
+- 关闭时确认提示，避免误操作
+- 支持 256 色、鼠标事件、curses/TUI 应用（neofetch、htop、vim 等）
+- 可配置字体大小、光标样式/闪烁、回滚行数、行高、字间距
 
-## 构建与运行
+### 系统监控
+- CPU 使用率（多核仪表盘 + 历史曲线）
+- 内存与交换分区实时图表
+- 进程列表（PID / CPU / 内存 / 用户）
+- 网络连接监控 — GeoIP 定位、活跃 TCP 连接、上下行速率
+- 磁盘空间使用率（所有挂载点）
 
-### 环境要求
+### 文件浏览器
+- 自动跟随终端工作目录（`cwd`）
+- "Show disks" 显示所有磁盘和挂载点
+- 右键菜单（复制路径、在新终端打开、属性等）
+- 目录空间使用率进度条
+- 列表 / 图标视图切换，可选隐藏点文件
 
-- Node.js >= 22
-- npm >= 10
-- Windows x64（当前版本仅支持 Windows，跨平台支持待后续版本）
+### 界面定制
+- **主题** — tron、cyborg、matrix、nord、blade、interstellar …
+- **19 种键盘布局** — 含 Dvorak、Colemak、Workman、BÉPO 等
+- CSS 注入 — 自由修改任意组件样式
+- 科幻音效（按键声、启动动画声、错误提示声），音量与放大倍数可调
+- 时钟 12/24 小时制切换
+- 入场动画速度调节
 
-### 开发模式
+### 设置与配置
+- 图形化设置页面，左侧分类导航
+- 一键恢复默认配置
+- 配置热重载 — 修改保存后立即生效，无需重启
+- 简体中文配置说明（配置键名保留英文，描述汉化）
+- 终端行为配置：新建时弹出 Shell 选择、默认终端类型、关闭时确认
 
-```bash
-cd src
-npm install
-npm run dev
-```
+---
 
-### 打包发布
+<p align="center">
+  <img alt="Screenshot 1" src="media/READMEimges/imges (1).png" width="45%">
+  <img alt="Screenshot 2" src="media/READMEimges/imges (5).png" width="45%">
+</p>
 
-```bash
-cd src
-npm run dist
-```
+<p align="center">
+  <img alt="Screenshot 3" src="media/READMEimges/imges (3).png" width="45%">
+  <img alt="Screenshot 4" src="media/READMEimges/imges (4).png" width="45%">
+</p>
 
-产物位于 `release/` 目录：
-- `eDEX-UI-Plus Setup 1.0.0.exe` — NSIS 安装程序
-- `win-unpacked/eDEX-UI-Plus.exe` — 便携版（解压即用）
+<p align="center">
+  <img alt="Screenshot 5" src="media/READMEimges/imges (2).png" width="90%">
+</p>
 
-### 运行测试
+---
 
-```bash
-cd src
-npm test
-```
+## 下载安装
 
-## 下载
+从 [GitHub Releases](https://github.com/tianlingmc/edex-ui-plus/releases/tag/v1.1.0) 下载安装包。
 
-从 [Releases](https://github.com/tianlingmc/edex-ui-plus/releases) 页面下载最新安装包。
-
-## 构建说明
-
-当前版本使用以下技术栈：
-
-| 组件 | 版本 |
+| 文件 | 说明 |
 |------|------|
-| Electron | 43.1.0 |
-| Vite / electron-vite | 7.x / 5.x |
-| xterm.js | 6.x (@xterm/xterm + addons) |
-| node-pty | 1.1.0 (conpty/WinPTY) |
-| PDF.js | 4.x |
-| Howler.js | 2.x |
-| systeminformation | 5.x |
-| ws (WebSocket) | 8.x |
-| electron-builder | 26.x (NSIS) |
+| [`eDEX-UI-Plus Setup 1.1.0.exe`](https://github.com/tianlingmc/edex-ui-plus/releases/tag/v1.1.0) | NSIS 安装程序（推荐），支持选择安装目录、创建快捷方式 |
+| `win-unpacked/` （便携版）| 解压即用，无需安装 |
+
+> 安装程序未经代码签名，Windows SmartScreen 会弹出警告，点击"仍要运行"即可。
+
+### 从源码构建
+
+**环境要求：** Node.js >= 22, npm >= 10, Windows x64
+
+```bash
+git clone https://github.com/tianlingmc/edex-ui-plus.git
+cd edex-ui-plus/src
+npm install
+npm run dev      # 启动开发模式（热更新）
+npm run dist     # 打包为安装程序
+npm test         # 运行测试
+```
+
+---
+
+## 技术栈
+
+| 组件 | 版本 | 用途 |
+|------|------|------|
+| [Electron](https://www.electronjs.org/) | 43 | 桌面应用框架 |
+| [Vite](https://vitejs.dev/) / [electron-vite](https://electron-vite.org/) | 7 / 5 | 构建工具链 |
+| [xterm.js](https://xtermjs.org/) | 6 | 终端模拟器核心 |
+| [node-pty](https://github.com/microsoft/node-pty) | 1 | 伪终端 (conpty / WinPTY) |
+| [PDF.js](https://mozilla.github.io/pdf.js/) | 4 | 文档阅读器 |
+| [Howler.js](https://howlerjs.com/) | 2 | 音效引擎 |
+| [systeminformation](https://systeminformation.io/) | 5 | 系统硬件信息 |
+| [maxmind](https://www.npmjs.com/package/maxmind) / [GeoLite2](https://dev.maxmind.com/geoip/geolite2-free-geolocation-data) | - | IP 地理定位 |
+| [electron-builder](https://www.electron.build/) | 26 | 打包 / NSIS 安装程序 |
+
+---
+
+## 许可
+
+[**GNU General Public License v3.0**](./LICENSE)
+
+本项目基于 [eDEX-UI](https://github.com/GitSquared/edex-ui) (原作者 Gabriel 'Squared' SAILLARD, 2021) 二次开发。
+
+- 完整许可文本： [LICENSE](./LICENSE)
+- 署名与第三方资源许可： [NOTICE](./NOTICE.md)
+- 原项目： <https://github.com/GitSquared/edex-ui>
+
+> 保留原版全部版权。本项目所有修改与附加代码同样以 GPL-3.0 许可发布。

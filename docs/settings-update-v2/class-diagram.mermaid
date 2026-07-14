@@ -1,0 +1,39 @@
+classDiagram
+    class UpdateController {
+        - state: UpdateState
+        - data: {current, latest, progress, downloaded}
+        - _unsub: Function
+        - _startupDismissed: boolean
+        + openUpdateModal(partial)
+        + initUpdateListener()
+        - _handleEvent(payload)
+        - _render()
+        - _closeModal()
+        - _onEsc(e)
+        - _requestInstall()
+    }
+    class MainAutoUpdater {
+        - _pendingStartupUpdate
+        + setupAutoUpdater(win)
+        + handleUpdateCheck()
+        + handleGetPendingUpdate()
+    }
+    class PreloadBridge {
+        + getAppVersion()
+        + updateCheck()
+        + updateQuitInstall()
+        + onUpdateEvent(cb) 退订
+        + getPendingUpdate() 新增
+    }
+    class SettingsEditor {
+        + openSettings()
+        + closeSettings()
+    }
+    class i18n {
+        + t(key)
+    }
+    UpdateController ..> PreloadBridge : onUpdateEvent / updateCheck / updateQuitInstall / getPendingUpdate
+    UpdateController ..> i18n : t(key)
+    MainAutoUpdater ..> PreloadBridge : invoke IPC
+    SettingsEditor ..> UpdateController : openUpdateModal / 启动 initUpdateListener
+    MainAutoUpdater ..> UpdateController : update-event(startup-update-available...)

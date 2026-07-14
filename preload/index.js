@@ -19,9 +19,10 @@ contextBridge.exposeInMainWorld('eDEX', {
   fsGetSpace: (dirPath) => ipcRenderer.invoke('fs-space', dirPath),
   fsListDrives: () => ipcRenderer.invoke('fs-listDrives'),
   fsOpenInExplorer: (filePath, isDir) => ipcRenderer.invoke('fs-openInExplorer', filePath, isDir),
-  // 更新检查 / 打开外部链接 / GeoIP 定位
+  // 更新检查 / 打开外部链接 / 版本号
   checkUpdate: () => ipcRenderer.invoke('check-update'),
   openExternal: (url) => ipcRenderer.invoke('open-external', url),
+  getAppVersion: () => ipcRenderer.invoke('get-app-version'),
   geoipLookup: () => ipcRenderer.invoke('geoip-lookup'),
   // 设置 / 重启
   readSettings: () => ipcRenderer.invoke('settings-read'),

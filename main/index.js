@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, shell } from 'electron'
+import { app, BrowserWindow, ipcMain, shell, net } from 'electron'
 import { join, normalize, sep } from 'path'
 import os from 'os'
 import fs from 'fs'
@@ -186,6 +186,13 @@ function createWindow() {
   win.webContents.on('did-fail-load', (_e, errorCode, errorDescription, validatedURL) => {
     console.error(`[main] load failed: ${validatedURL} -> ${errorCode} ${errorDescription}`)
   })
+  // preload 错误捕获：例如 preload 文件找不到或脚本异常
+  win.webContents.on('preload-error', (_e, preloadPath, error) => {
+    console.error(`[main] preload error: ${preloadPath} -> ${error.message || error}`)
+  })
+  win.webContents.on('render-process-gone', (_e, details) => {
+    console.error(`[main] render process gone: ${JSON.stringify(details)}`)
+  })
 
   const rendererUrl = process.env.ELECTRON_RENDERER_URL
   console.log('[main] ELECTRON_RENDERER_URL =', rendererUrl)
@@ -201,6 +208,7 @@ function createWindow() {
 app.whenReady().then(() => {
   startTerminalServer()
   const win = createWindow()
+  // 自动更新管理（仅打包环境真正启用，开发环境静默跳过）
   // 遥测中枢：窗口就绪后启动批量系统监控广播
   hub = new TelemetryHub(win)
   hub.start()
@@ -436,23 +444,66 @@ function compareVer(a, b) {
 }
 
 // 更新检查：主进程去 GitHub 取最新 release（渲染端不直接联网）
+// 多源顺序兜底：先直连官方 api.github.com（海外/VPN 用户最快），全部失败再依次走
+// 国内可访问的 GitHub 镜像代理。镜像仅做转发，返回结构与官方完全一致，因此无需改 parse 逻辑。
+// 每个源独立 5s 超时，单源失败自动切下一个；全部失败才返回 offline。
+const UPDATE_SOURCES = [
+  (repo) => `https://api.github.com/repos/${repo}/releases/latest`,
+  (repo) => `https://ghfast.top/https://api.github.com/repos/${repo}/releases/latest`,
+  (repo) => `https://ghproxy.com/https://api.github.com/repos/${repo}/releases/latest`
+]
+function hostOf(url) {
+  try { return new URL(url).host } catch { return url }
+}
+
+async function fetchLatestRelease(repo) {
+  let lastErr = null
+  for (let i = 0; i < UPDATE_SOURCES.length; i++) {
+    const url = UPDATE_SOURCES[i](repo)
+    const host = hostOf(url)
+    const ctrl = new AbortController()
+    const timer = setTimeout(() => ctrl.abort(), 5000)
+    try {
+      // 用 Electron 的 net.fetch 而非 Node 全局 fetch：走 Electron 网络栈，自动继承系统代理
+      // （浏览器/curl 能通而 Node fetch 不通，几乎都是 Node undici 不读系统代理所致）
+      const res = await net.fetch(url, { headers: { 'User-Agent': 'eDEX-UI-Plus' }, signal: ctrl.signal })
+      if (!res.ok) {
+        const body = await res.text().catch(() => '')
+        console.warn(`[check-update] source ${i + 1} (${host}) HTTP ${res.status}: ${body.slice(0, 200)}`)
+        lastErr = new Error(`GitHub API ${res.status}`)
+        continue // 该源返回非 2xx，尝试下一个镜像
+      }
+      console.log(`[check-update] source ${i + 1} (${host}) ok`)
+      return res.json()
+    } catch (e) {
+      lastErr = e
+      console.warn(`[check-update] source ${i + 1} (${host}) failed:`, e.message)
+    } finally {
+      clearTimeout(timer)
+    }
+  }
+  throw lastErr || new Error('all update sources failed')
+}
+
 ipcMain.handle('check-update', async () => {
   const current = app.getVersion()
   const repo = parseRepo()
   if (!repo) return { current, status: 'unconfigured' }
+
   try {
-    const res = await fetch(`https://api.github.com/repos/${repo}/releases/latest`, {
-      headers: { 'User-Agent': 'eDEX-UI-Plus' }
-    })
-    if (!res.ok) return { current, status: 'offline' }
-    const d = await res.json()
+    const d = await fetchLatestRelease(repo)
     const latest = String(d.tag_name || '').replace(/^v/, '')
+    const url = d.html_url || `https://github.com/${repo}/releases/latest`
     const cmp = compareVer(latest, current)
-    return { current, latest, url: d.html_url, status: cmp === 0 ? 'uptodate' : cmp > 0 ? 'update' : 'dev' }
+    return { current, latest, url, status: cmp === 0 ? 'uptodate' : cmp > 0 ? 'update' : 'dev' }
   } catch (e) {
+    console.warn('[check-update] all sources failed, last error:', e && e.message)
     return { current, status: 'offline' }
   }
 })
+
+// 新增 IPC：获取当前版本号
+ipcMain.handle('get-app-version', () => app.getVersion())
 
 // GeoIP：主进程用 GeoLite2-City + 公网 IP 解析出口经纬度
 // 注：geolite2-redist 的自动更新器因 SSL 证书验证问题（UNABLE_TO_VERIFY_LEAF_SIGNATURE）

@@ -1,7 +1,7 @@
 {
   "name": "edex-ui-plus",
   "productName": "eDEX-UI-Plus",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A science fiction desktop running everywhere. Based on eDEX-UI (GitSquared), GPL-3.0.",
   "license": "GPL-3.0",
   "author": "Gabriel 'Squared' SAILLARD (original author) and eDEX-UI-Plus contributors",
@@ -48,17 +48,19 @@
   "build": {
     "appId": "com.edex.ui.plus",
     "productName": "eDEX-UI-Plus",
-  "directories": {
+    "directories": {
       "output": "../release"
-  },
+    },
     "win": {
       "target": [
         {
           "target": "nsis",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         }
       ],
-      "icon": null,
+      "icon": "media/icon.ico",
       "signExecutable": false
     },
     "nsis": {

@@ -1,0 +1,30 @@
+sequenceDiagram
+    participant M as Main(setupAutoUpdater)
+    participant P as Preload(eDEX)
+    participant R as Renderer(UpdateController)
+    participant U as User
+    Note over M: app.whenReady -> setupAutoUpdater
+    M->>M: autoUpdater.checkForUpdates()（启动静默）
+    M-->>P: update-event {type:'checking'/'available'}（控制器忽略弹窗）
+    M->>M: update-available -> compareVer(latest, current) > 0 ?
+    alt 本地 < 最新（过期）
+        M->>M: _pendingStartupUpdate = {version, current}
+        M-->>P: update-event {type:'startup-update-available', version, current}
+        P-->>R: onUpdateEvent 回调
+        R->>R: openUpdateModal({status:'available', current, latest:version})
+        Note over R: 弹窗挂 document.body，显示当前/最新 + [稍后][更新]
+        U->>R: 点[更新]
+        R->>R: state -> downloading（不可关）
+        M-->>P: update-event {type:'progress', percent}
+        P-->>R: 更新进度条
+        M-->>P: update-event {type:'downloaded'}
+        P-->>R: state -> downloaded（不可关，询问安装）
+        U->>R: 点[立即安装]
+        R->>P: updateQuitInstall()
+        P->>M: update-quit-install -> autoUpdater.quitAndInstall()
+        M->>M: 进程退出并重启
+    else 网络失败 / 超时
+        M->>M: console.warn（静默忽略，不弹窗）
+    else 已是最新
+        M-->>P: update-event {type:'not-available'}（忽略）
+    end

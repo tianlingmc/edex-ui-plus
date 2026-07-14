@@ -3,6 +3,7 @@
 
 import { esc } from '../ui.js'
 import { t, currentLang } from '../locale.js'
+import { openUpdateModal } from './updateModal.js'
 
 let _isOpen = false
 
@@ -201,9 +202,48 @@ export function openSettings() {
       clip-path: polygon(0.4vh 0, 100% 0, 100% 100%, 0 100%, 0 0.4vh);
     }
     #se_footer #se-reset-btn:hover { background: rgba(var(--color_r), var(--color_g), var(--color_b), 0.1); border-color: rgb(var(--color_r), var(--color_g), var(--color_b)); }
+    .se_update_btn {
+      width: calc(100% - 1.6vw); margin: 0 0.8vw 1.2vh 0.8vw;
+      background: rgb(var(--color_r), var(--color_g), var(--color_b));
+      color: var(--color_light_black); border: none; padding: 0.7vh 0;
+      font-size: 1.3vh; font-family: var(--font_main); cursor: pointer; font-weight: bold;
+      letter-spacing: 0.1vw; transition: opacity .12s ease;
+      clip-path: polygon(0.4vh 0, 100% 0, 100% 100%, 0 100%, 0 0.4vh);
+    }
+    .se_update_btn:hover { opacity: 0.85; }
+    .se_update_modal {
+      position: fixed; inset: 0; z-index: 100000;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(0,0,0,0.55);
+      animation: se_fadeIn .15s ease;
+    }
+    .se_update_card {
+      width: 26vw; min-width: 280px;
+      background: rgba(var(--color_light_black), 0.92);
+      --aug-border: 0.18vh;
+      --aug-border-bg: rgb(var(--color_r), var(--color_g), var(--color_b));
+      --aug-border-opacity: 0.5;
+    }
+    .se_update_card .title {
+      margin: 0; padding: 0.6vh 0.9vw; font-size: 1.3vh; letter-spacing: 0.08vw;
+      border-bottom: 0.1vh solid rgba(var(--color_r), var(--color_g), var(--color_b), 0.3);
+      display: flex; justify-content: space-between; align-items: center; opacity: 0.9;
+    }
+    .se_update_card .title p { margin: 0; }
+    .se_update_card .panel-body { padding: 1vh 0.9vw; }
+    .se_um_hint { font-size: 1.2vh; opacity: 0.6; margin: 0.4vh 0; }
+    .se_um_btn {
+      margin-top: 0.8vh; width: 100%;
+      background: rgb(var(--color_r), var(--color_g), var(--color_b));
+      color: var(--color_light_black); border: none; padding: 0.7vh 0;
+      font-size: 1.3vh; font-family: var(--font_main); cursor: pointer; font-weight: bold;
+      letter-spacing: 0.1vw; transition: opacity .12s ease;
+      clip-path: polygon(0.4vh 0, 100% 0, 100% 100%, 0 100%, 0 0.4vh);
+    }
+    .se_um_btn:hover { opacity: 0.85; }
   </style>
   <div id="se_header">
-    <h1>${t('settings_title')}<i>eDEX-UI-Plus</i></h1>
+    <h1>${t('settings_title')}<i id="se-app-name">eDEX-UI-Plus</i></h1>
     <span class="se_hint">${t('esc_close')}</span>
   </div>
   <div id="se_body">
@@ -213,6 +253,8 @@ export function openSettings() {
       <div class="se_nav_item" data-section="audio">${t('nav_audio')}</div>
       <div class="se_nav_item" data-section="file">${t('nav_file')}</div>
       <div class="se_nav_item" data-section="network">${t('nav_network')}</div>
+      <div style="flex:1"></div>
+      <button id="se-update-btn" class="se_update_btn">${t('check_update')}</button>
     </div>
     <div id="se_content">
       ${terminal}${display}${audio}${file}${network}
@@ -228,6 +270,14 @@ export function openSettings() {
     const existing = document.getElementById('settings-page')
     if (existing) existing.remove()
     document.body.insertAdjacentHTML('beforeend', html)
+
+    // 顶栏动态注入版本号：eDEX-UI-Plus v1.1.0（若 API 不存在则静默保留原名）
+    if (window.eDEX && typeof window.eDEX.getAppVersion === 'function') {
+      window.eDEX.getAppVersion().then((v) => {
+        const el = document.getElementById('se-app-name')
+        if (el) el.textContent = 'eDEX-UI-Plus v' + (v || '')
+      }).catch(() => {})
+    }
 
     // 分类导航点击跳转
     document.querySelectorAll('.se_nav_item').forEach((item) => {
@@ -325,6 +375,27 @@ export function openSettings() {
         statusEl.textContent = t('error') + (e.message || e)
       }
     })
+
+    // ===== 检查更新（极简版：检测 + 跳转发布页，无下载/安装）=====
+    const updateBtn = document.getElementById('se-update-btn')
+    if (updateBtn) {
+      updateBtn.addEventListener('click', async () => {
+        // 先显示“检查中”，再消费 checkUpdate() 返回值
+        openUpdateModal({ status: 'checking' })
+        try {
+          const r = await window.eDEX.checkUpdate()
+          if (r && r.status === 'update') {
+            openUpdateModal({ status: 'available', current: r.current, latest: r.latest, url: r.url })
+          } else if (r && (r.status === 'offline' || r.status === 'unconfigured')) {
+            openUpdateModal({ status: 'error' })
+          } else {
+            openUpdateModal({ status: 'none' })
+          }
+        } catch (e) {
+          openUpdateModal({ status: 'error' })
+        }
+      })
+    }
 
   }).catch((e) => {
     console.error('[settingsEditor] load error:', e)

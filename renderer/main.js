@@ -45,7 +45,7 @@ import { Keyboard } from './modules/keyboard.js'
 import { Toplist } from './modules/toplist.js'
 import { HardwareInspector } from './modules/hardwareInspector.js'
 import { TerminalManager } from './modules/terminalManager.js'
-import { checkForUpdates } from './modules/updateChecker.js'
+import { openUpdateModal } from './modules/updateModal.js'
 import { FuzzyFinder } from './modules/fuzzyFinder.js'
 import { openSettings, closeSettings } from './modules/settingsEditor.js'
 import { t } from './locale.js'
@@ -154,8 +154,14 @@ async function startUI() {
     }
     // expand 音效已在模块初始化前提前播放，此处不再重复
 
-    // 启动后静默检查更新 + 加载设置
-    checkForUpdates()
+    // 启动后静默检查更新：有更新才弹窗，无更新/检测失败均不打扰（极简版：仅检测 + 跳转发布页）
+    window.eDEX.checkUpdate()
+      .then((r) => {
+        if (r && r.status === 'update') {
+          openUpdateModal({ status: 'available', current: r.current, latest: r.latest, url: r.url })
+        }
+      })
+      .catch(() => {})
     window.eDEX.readSettings().then((r) => { window.__edexSettings = r.settings }).catch(() => {})
 
   /*
@@ -393,7 +399,14 @@ async function startUI() {
         return
       }
 
-      // 5) 以上都没有 → 单次 ESC 打开菜单
+      // 5) 地球全屏打开 → 交给 locationGlobe.js 处理
+      if (window.__globeFullscreen) {
+        // 手动触发自定义事件，locationGlobe 监听此事件退出全屏
+        window.dispatchEvent(new CustomEvent('globe-exit-fullscreen'))
+        return
+      }
+
+      // 6) 以上都没有 → 单次 ESC 打开菜单
       e.preventDefault(); e.stopPropagation()
       showEscMenu()
     }, true)

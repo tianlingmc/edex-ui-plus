@@ -84,5 +84,13 @@
   "closeTermPrompt": "关闭终端时确认",
   "closeTermPrompt_desc": "关闭终端前弹出确认提示",
   "reset_defaults": "恢复默认配置",
-  "reset_done": "已恢复默认值"
+  "reset_done": "已恢复默认值",
+  "check_update": "检查更新",
+  "update_title": "更新",
+  "update_checking": "正在检查更新…",
+  "update_available": "发现新版本 {latest}（当前 {current}）",
+  "update_none": "已是最新版本",
+  "update_error": "检查更新失败，请稍后重试",
+  "update_open_release": "前往下载",
+  "update_close": "关闭"
 }

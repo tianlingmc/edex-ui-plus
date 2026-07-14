@@ -91,7 +91,8 @@ export class TerminalManager {
       const { termId, type, data, shell } = msg
 
       if (type === 'shells') {
-        this._shells = shell || []
+        // 服务端消息 key 为 shells（带 s），用 shells 而不是 shell 解构
+        this._shells = msg.shells || []
         return
       }
 
