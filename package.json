@@ -58,7 +58,7 @@
           "arch": ["x64"]
         }
       ],
-      "icon": null,
+      "icon": "media/icon.ico",
       "signExecutable": false
     },
     "nsis": {
