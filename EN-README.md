@@ -86,6 +86,10 @@
 ---
 
 <p align="center">
+  <img alt="Screenshot 0" src="media/READMEimges/pic.png" width="90%">
+</p>
+
+<p align="center">
   <img alt="Screenshot 1" src="media/READMEimges/imges (1).png" width="45%">
   <img alt="Screenshot 2" src="media/READMEimges/imges (5).png" width="45%">
 </p>
@@ -96,7 +100,7 @@
 </p>
 
 <p align="center">
-  <img alt="Screenshot 5" src="media/READMEimges/imges (2).png" width="90%">
+  <img alt="Screenshot 5" src="media/READMEimges/release-1.1.0-pic1.png" width="90%">
 </p>
 
 ---
