@@ -131,6 +131,18 @@ npm test         # Run tests
 
 ---
 
+## Changelog
+
+### v1.1.0
+- **Update mechanism rework**: Removed `electron-updater` auto download/install; replaced with a lightweight "Check for Updates" — manual check via Settings plus silent startup verification (no prompt when nothing is new). When a new version is found, only a prompt linking to the GitHub Release page is shown.
+- **Bilingual dialog**: The update dialog is now Simplified Chinese / English, and all states are dismissible.
+- **Network compatibility**: Update check now uses Electron `net.fetch` (inherits system proxy and root CAs), fixing "check update failed" under MITM proxies in China; added multi-source fallback (official API → ghfast.top → ghproxy.com mirror).
+- **Docs**: README / EN-README now include a language switch and AI-translation notice.
+
+> **Known issues**: Cross-platform builds (macOS / Linux) are not yet available; the GeoIP database auto-updater is still affected by proxy certs and has been silently downgraded to the local DB / online IP API, which does not block main features.
+
+---
+
 ## Tech Stack
 
 | Component | Version | Purpose |
