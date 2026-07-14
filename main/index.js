@@ -167,7 +167,8 @@ function createWindow() {
       preload: join(__dirname, '../preload/index.js'),
       contextIsolation: true,
       nodeIntegration: false,
-      spellcheck: false
+      spellcheck: false,
+      devTools: true
     }
   })
 
@@ -176,6 +177,9 @@ function createWindow() {
   if (isDev) {
     // 如需 DevTools 可手动按 Ctrl+Shift+I
     console.log('[main] dev mode, DevTools 手动打开 (Ctrl+Shift+I)')
+  } else {
+    // 临时调试：打包后自动开 DevTools，便于查黑屏问题
+    win.webContents.openDevTools({ mode: 'detach' })
   }
   win.webContents.on('console-message', (event) => {
     const { level, message, lineNumber, sourceId } = event
@@ -185,6 +189,13 @@ function createWindow() {
   })
   win.webContents.on('did-fail-load', (_e, errorCode, errorDescription, validatedURL) => {
     console.error(`[main] load failed: ${validatedURL} -> ${errorCode} ${errorDescription}`)
+  })
+  // preload 错误捕获：例如 preload 文件找不到或脚本异常
+  win.webContents.on('preload-error', (_e, preloadPath, error) => {
+    console.error(`[main] preload error: ${preloadPath} -> ${error.message || error}`)
+  })
+  win.webContents.on('render-process-gone', (_e, details) => {
+    console.error(`[main] render process gone: ${JSON.stringify(details)}`)
   })
 
   const rendererUrl = process.env.ELECTRON_RENDERER_URL

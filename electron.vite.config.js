@@ -45,6 +45,14 @@ export default defineConfig({
     root: 'renderer',
     // 构建产物用相对路径，打包后通过 file:// 加载时资源才能正确解析
     base: './',
+    plugins: [{
+      name: 'strip-crossorigin',
+      apply: 'build',
+      enforce: 'post',
+      transformIndexHtml(html) {
+        return html.replace(/\s+crossorigin(=["\'][^"\']*["\'])?/g, '')
+      }
+    }],
     build: {
       rollupOptions: {
         // 注意：build 的 input 是相对工程根 (src/) 解析的，与 main/preload 一致，不能用 'index.html'
