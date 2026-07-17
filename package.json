@@ -60,7 +60,7 @@
           ]
         }
       ],
-      "icon": "media/icon.ico",
+      "icon": "media/icon.png",
       "signExecutable": false
     },
     "nsis": {
