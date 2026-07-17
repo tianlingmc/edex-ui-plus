@@ -113,5 +113,7 @@
   "process_loading": "加载中…",
   "process_group_identity": "标识",
   "process_group_resources": "资源",
-  "process_group_runtime": "运行"
+  "process_group_runtime": "运行",
+  "shutting_down": "正在关机…",
+  "shutdown_terminating": "正在结束进程…"
 }

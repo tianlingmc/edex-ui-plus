@@ -51,6 +51,7 @@ import { openSettings, closeSettings } from './modules/settingsEditor.js'
 import { t } from './locale.js'
 import { closeTopModal } from './modules/modal.js'
 import { audiofx } from './modules/audiofx.js'
+import { initShutdown } from './modules/shutdown.js'
 import enUSLayout from './assets/keyboards/en-US.json'
 
 console.log('[renderer] main.js imports ok, eDEX=', typeof window.eDEX)
@@ -117,6 +118,7 @@ async function startUI() {
   ;(function initNextMod() {
     if (_modIdx >= mods.length) {
       // 所有模块就绪 → 启动遥测 + 淡入动画
+      initShutdown()   // 注册关闭动画监听（窗口级 close 由主进程触发，与 ESC 关弹窗无关）
       initTelemetry()
       startFadeIn()
       return

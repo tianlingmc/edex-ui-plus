@@ -13,6 +13,9 @@ import { TelemetryHub } from './telemetry.js'
 const PORT = 3000
 let wss = null
 let hub = null
+// 关闭动画：窗口关闭拦截所需状态
+let mainWindow = null      // 指向主窗口，供模块级 IPC 回调引用
+let shutdownTimer = null   // 渲染端 2s 内未回执时的强关兜底计时器
 
 // ====== 可用 Shell 检测 ======
 // 格式：{ id: 'powershell', label: 'PowerShell 7', bin: 'pwsh.exe' }
@@ -208,6 +211,21 @@ function createWindow() {
 app.whenReady().then(() => {
   startTerminalServer()
   const win = createWindow()
+  mainWindow = win
+
+  // ====== 关闭动画拦截 ======
+  // 用户点 X / Alt+F4 / Cmd+Q 关闭窗口时，先拦截 close 事件，
+  // 通知渲染端播放全屏科幻关机动画；动画播完由渲染端回执 app:shutdown-done 后再真正关窗。
+  win.on('close', (e) => {
+    if (mainWindow && mainWindow.__allowClose) return // 已获准，正常关闭
+    e.preventDefault()                                // 拦截，先播动画
+    if (shutdownTimer) return                         // 防重入：已在播
+    try { mainWindow.webContents.send('app:shutdown') } catch (_) {}
+    shutdownTimer = setTimeout(() => {                // 安全兜底：渲染端 7s 内未回执则强关
+      try { mainWindow.destroy() } catch (_) {}       // logo 重放约 2.7s + logo 淡出 0.7s + 整体淡出 1.6s ≈ 5.0s，< 7s 留足余量
+    }, 7000)
+  })
+
   // 自动更新管理（仅打包环境真正启用，开发环境静默跳过）
   // 遥测中枢：窗口就绪后启动批量系统监控广播
   hub = new TelemetryHub(win)
@@ -706,6 +724,13 @@ ipcMain.handle('app-restart', async () => {
 })
 ipcMain.handle('app-quit', async () => {
   app.quit()
+})
+
+// 关闭动画回执：渲染端关机动画播完后调用，真正关窗
+ipcMain.on('app:shutdown-done', () => {
+  if (shutdownTimer) { clearTimeout(shutdownTimer); shutdownTimer = null }
+  if (mainWindow) mainWindow.__allowClose = true
+  if (mainWindow) mainWindow.close()
 })
 
 // 可用 Shell 列表

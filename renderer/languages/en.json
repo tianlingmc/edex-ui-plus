@@ -113,5 +113,7 @@
   "process_loading": "LOADING…",
   "process_group_identity": "IDENTITY",
   "process_group_resources": "RESOURCES",
-  "process_group_runtime": "RUNTIME"
+  "process_group_runtime": "RUNTIME",
+  "shutting_down": "SHUTTING DOWN…",
+  "shutdown_terminating": "TERMINATING PROCESSES…"
 }

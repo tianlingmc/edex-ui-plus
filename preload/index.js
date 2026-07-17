@@ -30,5 +30,8 @@ contextBridge.exposeInMainWorld('eDEX', {
   restartApp: () => ipcRenderer.invoke('app-restart'),
   quitApp: () => ipcRenderer.invoke('app-quit'),
   // Shell 检测
-  getAvailableShells: () => ipcRenderer.invoke('get-available-shells')
+  getAvailableShells: () => ipcRenderer.invoke('get-available-shells'),
+  // 关闭动画：主进程 → 渲染端广播 / 渲染端 → 主进程回执
+  on: (channel, cb) => ipcRenderer.on(channel, (_e, ...args) => cb(...args)),
+  shutdown: () => ipcRenderer.send('app:shutdown-done')
 })

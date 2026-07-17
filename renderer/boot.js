@@ -24,7 +24,7 @@ async function getBootLog() {
   }
 }
 
-async function displayTitleScreen(screen, logoText) {
+async function displayTitleScreen(screen, logoText, keep = false) {
   audiofx.play('theme')
   await _delay(400)
   document.body.classList.remove('solidBackground')
@@ -53,7 +53,7 @@ async function displayTitleScreen(screen, logoText) {
   title.setAttribute('style', `border: 5px solid rgb(${rgb});`)
 
   await _delay(1000)
-  if (screen.parentNode) screen.remove()
+  if (!keep && screen.parentNode) screen.remove()
 }
 
 // 运行完整启动序列：滚动 boot 日志 -> 标题故障动画 -> 移除遮罩
@@ -110,4 +110,19 @@ export async function runBootSequence(logoOverride) {
   await displayLine()
   // booting 保留到 startUI 接管后再移除（由 main.js 在 applyTheme 后移除），
   // 保证面板淡入动画开始前不被提前显示。
+}
+
+// 关机时重放 logo 故障动画（不移除 screen，交由调用方淡出）
+export async function replayLogo() {
+  const logo = (window.__edexSettings && window.__edexSettings.bootLogo) || 'eDEX-UI-Plus'
+  let screen = document.getElementById('boot_screen')
+  if (!screen) {
+    screen = document.createElement('section')
+    screen.id = 'boot_screen'
+    document.body.appendChild(screen)
+  }
+  screen.style.zIndex = '9999999'
+  document.body.classList.add('booting')   // 隐藏其它面板，仅留 logo
+  await displayTitleScreen(screen, logo, true)
+  return screen
 }
