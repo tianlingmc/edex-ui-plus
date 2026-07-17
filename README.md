@@ -1,5 +1,5 @@
 <p align="center">
-  <img alt="Logo" src="media/logo.png" width="256">
+  <img alt="Logo" src="media/READMEimges/logo.png" width="256">
 </p>
 
 <h1 align="center">eDEX-UI-Plus</h1>
@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/tianlingmc/edex-ui-plus/releases"><img alt="Version" src="https://img.shields.io/badge/版本-v1.1.0-00d8ff?style=flat-square"></a>
+  <a href="https://github.com/tianlingmc/edex-ui-plus/releases"><img alt="Version" src="https://img.shields.io/badge/版本-v1.2.0-00d8ff?style=flat-square"></a>
   <a href="./LICENSE"><img alt="License" src="https://img.shields.io/badge/许可-GPLv3-00d8ff?style=flat-square"></a>
   <a href="https://github.com/tianlingmc/edex-ui-plus/releases"><img alt="Downloads" src="https://img.shields.io/badge/下载-安装包-00d8ff?style=flat-square"></a>
   <a href="https://github.com/GitSquared/edex-ui"><img alt="Based on" src="https://img.shields.io/badge/基于-eDEX--UI-00d8ff?style=flat-square"></a>
@@ -39,6 +39,7 @@
 | 主题 | 科幻主题 + CSS 注入 + 自定义键盘布局 |
 | 音效 | 科幻风格按键音、启动音、音量/放大可调 |
 | 阅读器 | PDF / Markdown / 图片内联预览 |
+| 关机动画 | 退出时重放 logo 动画并缓淡到黑 |
 | 更多 | WebGL 互动地球、内置媒体播放器、Ping 连通检测 |
 
 ---
@@ -105,11 +106,11 @@
 
 ## 下载安装
 
-从 [GitHub Releases](https://github.com/tianlingmc/edex-ui-plus/releases/tag/v1.1.0) 下载安装包。
+从 [GitHub Releases](https://github.com/tianlingmc/edex-ui-plus/releases/tag/v1.2.0) 下载安装包。
 
 | 文件 | 说明 |
 |------|------|
-| [`eDEX-UI-Plus Setup 1.1.0.exe`](https://github.com/tianlingmc/edex-ui-plus/releases/tag/v1.1.0) | NSIS 安装程序（推荐），支持选择安装目录、创建快捷方式 |
+| [`eDEX-UI-Plus Setup 1.2.0.exe`](https://github.com/tianlingmc/edex-ui-plus/releases/tag/v1.2.0) | NSIS 安装程序（推荐），支持选择安装目录、创建快捷方式 |
 | `win-unpacked/` （便携版）| 解压即用，无需安装 |
 
 > 安装程序未经代码签名，Windows SmartScreen 会弹出警告，点击"仍要运行"即可。
@@ -130,6 +131,11 @@ npm test         # 运行测试
 ---
 
 ## 更新日志
+
+### v1.2.0
+- **进程模块增强**：进程列表打开/关闭增加科幻音效；进程详情页改为全屏布局，加载更迅速（首屏即时渲染 + 骨架屏），并按用户 / 内存 / CPU 分组展示，视觉对齐原版。
+- **关机动画**：退出程序时重放开机 logo 故障动画，随后 logo 淡出、整屏缓慢淡黑再真正关窗，提供连贯的科幻收尾；主进程 7 秒兜底强关，异常时也能正常退出。
+- **应用图标与 Logo 更新**：替换 `media` 下的图标与 Logo 为新设计（icon.ico / logo.png / logo.svg 等），安装包与窗口图标同步更新。
 
 ### v1.1.0
 - **更新机制重构**：移除 `electron-updater` 的自动下载 / 安装，改为轻量「检查更新」——设置页手动检测 + 启动静默校验（无更新不打扰），检测到新版本仅提示并跳转 GitHub Release 发布页。

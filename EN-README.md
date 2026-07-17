@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/tianlingmc/edex-ui-plus/releases"><img alt="Version" src="https://img.shields.io/badge/version-v1.1.0-00d8ff?style=flat-square"></a>
+  <a href="https://github.com/tianlingmc/edex-ui-plus/releases"><img alt="Version" src="https://img.shields.io/badge/version-v1.2.0-00d8ff?style=flat-square"></a>
   <a href="./LICENSE"><img alt="License" src="https://img.shields.io/badge/license-GPLv3-00d8ff?style=flat-square"></a>
   <a href="https://github.com/tianlingmc/edex-ui-plus/releases"><img alt="Downloads" src="https://img.shields.io/badge/download-installer-00d8ff?style=flat-square"></a>
   <a href="https://github.com/GitSquared/edex-ui"><img alt="Based on" src="https://img.shields.io/badge/based%20on-eDEX--UI-00d8ff?style=flat-square"></a>
@@ -42,6 +42,7 @@
 | Themes | Sci-fi themes + CSS injection + custom keyboard layouts |
 | Sound | Sci-fi sound effects with adjustable volume and amplification |
 | Reader | PDF / Markdown / image inline preview |
+| Shutdown | Replays logo glitch animation then fades to black on exit |
 | More | WebGL interactive globe, media player, Ping connectivity check |
 
 ---
@@ -107,11 +108,11 @@
 
 ## Installation
 
-Download the latest installer from the [GitHub Releases](https://github.com/tianlingmc/edex-ui-plus/releases/tag/v1.1.0) page.
+Download the latest installer from the [GitHub Releases](https://github.com/tianlingmc/edex-ui-plus/releases/tag/v1.2.0) page.
 
 | File | Description |
 |------|-------------|
-| [`eDEX-UI-Plus Setup 1.1.0.exe`](https://github.com/tianlingmc/edex-ui-plus/releases/tag/v1.1.0) | NSIS installer (recommended), supports custom install directory and desktop shortcut |
+| [`eDEX-UI-Plus Setup 1.2.0.exe`](https://github.com/tianlingmc/edex-ui-plus/releases/tag/v1.2.0) | NSIS installer (recommended), supports custom install directory and desktop shortcut |
 | `win-unpacked/` (portable) | Extract and run, no installation required |
 
 > The installer is not code-signed. Windows SmartScreen may show a warning — click "Run anyway" to proceed.
@@ -132,6 +133,11 @@ npm test         # Run tests
 ---
 
 ## Changelog
+
+### v1.2.0
+- **Process module enhancements**: Sci-fi sound effects when opening/closing the process list; the process detail page is now fullscreen with faster loading (instant first paint + skeleton screen) and grouped by user / memory / CPU, visually aligned with the original.
+- **Shutdown animation**: On exit, the boot logo glitch animation replays, then the logo fades out and the whole screen slowly fades to black before the window actually closes — a coherent sci-fi finale. A 7-second main-process fallback force-closes the app if anything goes wrong.
+- **App icon & logo refresh**: Replaced the icons and logo under `media` with a new design (icon.ico / logo.png / logo.svg etc.); the installer and window icon are updated accordingly.
 
 ### v1.1.0
 - **Update mechanism rework**: Removed `electron-updater` auto download/install; replaced with a lightweight "Check for Updates" — manual check via Settings plus silent startup verification (no prompt when nothing is new). When a new version is found, only a prompt linking to the GitHub Release page is shown.
