@@ -1,5 +1,5 @@
 <p align="center">
-  <img alt="Logo" src="media/icon.png" width="256">
+  <img alt="Logo" src="media/logo.png" width="256">
 </p>
 
 <h1 align="center">eDEX-UI-Plus</h1>

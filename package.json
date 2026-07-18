@@ -51,6 +51,15 @@
     "directories": {
       "output": "../release"
     },
+    "extraResources": [
+      {
+        "from": "media",
+        "to": "media",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
     "win": {
       "target": [
         {
@@ -60,7 +69,7 @@
           ]
         }
       ],
-      "icon": "media/icon.png",
+      "icon": "media/icon.ico",
       "signExecutable": false
     },
     "nsis": {

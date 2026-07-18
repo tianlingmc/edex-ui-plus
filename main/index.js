@@ -163,9 +163,18 @@ function startTerminalServer() {
 }
 
 function createWindow() {
+  // 运行时窗口/任务栏图标：
+  // - 开发态（ELECTRON_RENDERER_URL 存在）：用项目根 media/icon.ico
+  // - 打包态：media/ 经 extraResources 分发到 asar 外，
+  //   位于 process.resourcesPath/media/icon.ico（asar 内 __dirname 不可靠，故用 resourcesPath）
+  const iconPath = process.env.ELECTRON_RENDERER_URL
+    ? join(__dirname, '../media/icon.ico')
+    : join(process.resourcesPath, 'media/icon.ico')
+
   const win = new BrowserWindow({
     fullscreen: true,                    // 与原 eDEX-UI 一致：全屏沉浸
     backgroundColor: '#000000',
+    icon: iconPath,
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       contextIsolation: true,
