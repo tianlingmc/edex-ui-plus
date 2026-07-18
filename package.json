@@ -76,7 +76,9 @@
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
-      "createStartMenuShortcut": true
+      "createStartMenuShortcut": true,
+      "installerIcon": "media/icon.ico",
+      "uninstallerIcon": "media/icon.ico"
     }
   },
   "allowScripts": {
